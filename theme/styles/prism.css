@@ -10,9 +10,9 @@
 }
 
 .slidev-code code {
-  font-family: "Operator Mono SSm A", "Operator Mono SSm B", ui-monospace,
-    SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
-    monospace !important;
+  font-family: "Operator Mono SSm A", "Operator Mono SSm B", "JetBrains Mono",
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace !important;
   font-style: normal;
   font-weight: 400;
 }
@@ -65,7 +65,7 @@ html.dark {
   --prism-selection-background: #444444;
 }
 
-:not(pre) > code {
+.slidev-layout :not(pre) > code {
   font-size: 0.9em;
   background: rgba(125, 156, 242, 0.14);
   @apply font-light py-0.5;

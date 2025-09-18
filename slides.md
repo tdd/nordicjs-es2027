@@ -7,7 +7,7 @@ background: /covers/mosi-knife--PVgDgKXgZA-unsplash.jpg
 class: text-center
 highlighter: shiki
 monaco: false
-lineNumbers: true
+lineNumbers: false
 favicon: https://delicious-insights.com/apple-touch-icon.png
 fonts:
   sans: PT Sans
@@ -23,7 +23,7 @@ drawings:
 css: unocss
 ---
 
-# What’s up in ES2026?
+# What’s up in ES2027?
 
 A talk by [Christophe Porteneuve](https://www.linkedin.com/in/christopheporteneuve/) at [Nordic.js 2025](https://nordicjs.com/2025)
 
@@ -57,6 +57,6 @@ Christophe: [`@porteneuve@piaille.fr`](https://piaille.fr/@porteneuve) / [Linked
 <div class="mt-8 text-sm" style="opacity: 0.5">
 
 Photo credits:
-Cloudy blue sky by <a href="https://unsplash.com/@mosiknife?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">mosi knife</a>, Confused by <a href="https://unsplash.com/@armedshutter?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Ayo Ogunsende</a>, Summary by <a href="https://unsplash.com/fr/@aaronburden">Aaron Burden</a>, Gift unwrapping by <a href="https://unsplash.com/fr/@kadh">Kira auf der Heide</a> and Open door by <a href="https://unsplash.com/@craft_ear?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jan Tinneberg</a>, all from <a href="https://unsplash.com/fr/s/photos/react?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>.
+Cloudy blue sky by <a href="https://unsplash.com/@mosiknife?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">mosi knife</a>, Confused by <a href="https://unsplash.com/@armedshutter?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Ayo Ogunsende</a>, Summary by <a href="https://unsplash.com/fr/@aaronburden">Aaron Burden</a>, Gift unwrapping by <a href="https://unsplash.com/fr/@kadh">Kira auf der Heide</a>, Open door by <a href="https://unsplash.com/@craft_ear?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Jan Tinneberg</a> and Stuck by <a href="https://unsplash.com/@octoberroses?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Audrey Odom</a>, all from <a href="https://unsplash.com/fr/s/photos/react?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>.
 
 </div>

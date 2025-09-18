@@ -7,143 +7,7 @@ background: /covers/jan-tinneberg-tVIv23vcuz4-unsplash.jpg
 
 ---
 
-# E2025? `Array.fromAsync(…)` <span class="stage">stage 3</span>
-
-We've had `Array.from(…)` since ES2015, that consumes any **synchronous iterable** to turn it into an actual array.
-
-We'll likely get `Array.fromAsync(…)`, that does the same thing with **async iterables**.
-
-```js
-// Reads all STDIN (readable stream) lines into an array
-process.stdin.setEncoding('utf-8')
-const inputLines = await Array.fromAsync(process.stdin)
-```
-
-```js
-// Let's remove trailing whitespace / LF / CR, while we're at it
-process.stdin.setEncoding('utf-8')
-const inputLines = await Array.fromAsync(process.stdin, (line) => line.trimEnd())
-```
-
----
-
-# E2025? Collection / iterator utilities <span class="stage">stage 3</span>
-
-We're not going to stop processing data collections (and iterables in general) anytime soon, so we might as well have more tools in our standard toolbelt for this…
-
-We're about to get many [**new `Set` methods**](https://github.com/tc39/proposal-set-methods#readme) (intersection, union, difference, disjunction, super/subset, etc.) and a ton of [**iterator helpers**](https://github.com/tc39/proposal-iterator-helpers#readme) (instead of having to roll our own generative functions for `take`, `filter` or `map`, for instance).
-
-```js
-function* fibonacci() { /* … */ }
-
-const firstTens = new Set([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-const fibs = new Set(fibonacci().take(10))
-const earlyFibs = firstTens.intersection(fibonacci) // => Set { 1, 2, 3, 5, 8 }
-const earlyNonFibs = firstTens.difference(fibonacci) // => Set { 4, 6, 7, 9, 10 }
-const evenFibs = earlyFibs.values().filter((n) => n % 2 === 0)
-```
-
-<Footnote>
-
-Asynchronous versions are in the pipeline too, at stage 2 right now (February 2024).
-
-</Footnote>
-
-
----
-
-# ES2025? Guaranteed resource cleanup <span class="stage">stage 3</span>
-
-Finally a mechanism to guarantee resource disposal!
-
-Quite like C#'s `using`, Python's `with` or Java's try-with-resources: disposes of the resource in a guaranteed way when the scope or closure is discarded.
-
-Exists in synchronous and asynchronous variants.  Based on two new well-known symbols (`Symbol.dispose` et `Symbol.asyncDispose`), supported out-of-the-box by timers and streams.
-
-```js
-async function copy4K(s1, s2) {
-  using f1 = await fs.promises.open(s1, constants.O_RDONLY),
-        f2 = await fs.promises.open(s2, constants.O_WRONLY)
-
-  const buffer = Buffer.alloc(4096)
-  const { bytesRead } = await f1.read(buffer)
-  await f2.write(buffer, 0, bytesRead)
-} // 'f2' is disposed first, then 'f1' is disposed second
-```
-
-<Footnote>
-
-Proposal's name: *Explicit Resource Management*. TypeScript 5.2+ and Babel 7.22+ support it. Early implementations in Node.js (e.g. Timers).
-
-</Footnote>
-
----
-
-# ES2025? Import / export attributes <span class="stage">stage 3</span>
-
-Provides free-form metadata on imports, with an inline syntax.
-
-The dominating use case, long discussed, is extra module types with matching type expectations for security reasons (a bit like HTTP's `X-Content-Type-Options: nosniff` response header).  We then use the `type` metadata, leveraged by engines.
-
-```js
-// Static imports
-import config from '../config/config.json' with { type: 'json' }
-
-// Dynamic imports
-const { default: config } = await import('../config/config.json', { with: { type: 'json' } })
-```
-
-The spec suggests matching upgrades for Web Worker instantiation and HTML's `script` tag.
-
-<Footnote>
-
-This proposal supersedes the same-stage *JSON Modules* proposal, that used a more specific `assert` syntax.
-
-</Footnote>
-
-
----
-
-# ES2025? More flexible named capture groups <span class="stage">stage 3</span>
-
-Named capture groups are a major readability / maintainability boost for regexes, but an oversight in their initial spec prevented using the same group in multiple parts of an alternative.
-
-It should have been ready for ES2023 but lacked some tests and a second native implementation.  Tests are done now and we're waiting for either v8 or Spidermonkey to jump the gun: this will very likely be part of ES2024.
-
-```js
-const year = dateText.match(/(?<year>[0-9]{4})-[0-9]{2}|[0-9]{2}-(?<year>[0-9]{4})/)?.groups.year
-```
-
-
----
-
-# ES2025? Decorators <span class="stage">stage 3</span>
-
-<!-- Certes, ça ne concerne que les gens qui font beaucoup de POO, et si la tendance  est à la baisse en JS, de nombreux frameworks importants l'utilisent énormément (mais du coup, ils ont tendance à le faire en TypeScript). -->
-
-This takes **forever**…  Went through a few false-starts, then we had to wrap the test suite, and now we're waiting for native implementations.  The spec is done, anyway, and TypeScript aligns with it.  This is a great way of doing AOP *(as are ES proxies, by the way)*.  The language provides the plumbing, and the community provides the actual decorators.
-
-```js
-class SuperWidget extends Component {
-  @deprecate
-  deauth() { … }
-
-  @memoize('1m')
-  userFullName() { … }
-
-  @autobind
-  logOut() {
-    this.#oauthToken = null
-  }
-
-  @override
-  render() { … }
-}
-```
-
----
-
-# ES2025? Shadow Realms <span class="stage">stage "2.7"</span>
+# ES2027? Shadow Realms <span class="stage">stage "2.7"</span>
 
 This provides the building blocks for having full control of **sandboxed JS evaluation** (among other things, you can customize available globals and standard library elements).
 
@@ -165,65 +29,42 @@ Check out [this explainer](https://github.com/tc39/proposal-shadowrealm/blob/mai
 
 ---
 
-# Temporal 🥳 <span class="stage">stage 3</span>
+# ES2027? Joint iteration <span class="stage">stage 2.7</span>
 
-This will (advantageously) replace Moment, Luxon, date-fns, etc. We already have `Intl` for formatting, but we're upping our game here. Immutable-style API, nanosecond precision, all TZ supported, distinguishes absolute and local time, duration vs. interval, etc.  Just awesome! Check out the [docs](https://tc39.es/proposal-temporal/docs/), [cookbook](https://tc39.es/proposal-temporal/docs/cookbook.html) and [Maggie's talk at dotJS 2019](https://www.dotconferences.com/2019/12/maggie-johnson-pint-making-time-make-sense)!
-
-```js
-const meeting1 = Temporal.Date.from('2020-01-01')
-const meeting2 = Temporal.Date.from('2020-04-01')
-const time = Temporal.Time.from('10:00:00')
-const timeZone = new Temporal.TimeZone('America/Montreal')
-timeZone.getAbsoluteFor(meeting1.withTime(time)) // => 2020-01-01T15:00:00.000Z
-timeZone.getAbsoluteFor(meeting2.withTime(time)) // => 2020-01-01T14:00:00.000Z
-```
-
-<v-click>
+Advancing multiple iterators in lockstep, much like Ruby's or Lodash's `zip`. Default mode stops at shortest, but there is a `'longest'` mode (with optional `padding`) and a `'strict'` mode (matching sizes required).
 
 ```js
-const departure = Temporal.ZonedDateTime.from('2020-03-08T11:55:00+08:00[Asia/Hong_Kong]');
-const arrival = Temporal.ZonedDateTime.from('2020-03-08T09:50:00-07:00[America/Los_Angeles]');
-departure.until(arrival).toString() // => 'PT12H55M'
+const codes = [400, 401]
+const statuses = ['Bad request', 'Unauthorized']
 
-const flightTime = Temporal.Duration.from({ hours: 14, minutes: 10 }); // { minutes: 850 } would work too
-const parisArrival = departure.add(flightTime).withTimeZone('Europe/Paris');
-parisArrival.toString() // => '2020-03-08T19:05:00+01:00[Europe/Paris]')
+Array.from(Iterator.zip([codes, statuses]))
+// => [ [400, 'Bad request'], [401, 'Unauthorized'] ]
+
+Array.from(Iterator.zipKeyed({ code: codes, status: statuses }))
+// => [ { code: 400, status: 'Bad request' }, { code: 401, status: 'Unauthorized' } ]
+
+Array.from(Iterator.zipKeyed(
+  { code: [...codes, 403], status: statuses },
+  { mode: 'longest', padding: { status: '???' } }
+))
+// => [ { code: 400, status: 'Bad request' }, ..., { code: 403, status: '???' } ]
 ```
 
-</v-click>
+There's a stage-1 proposal to expose this also as statics on `Array`, for convenience.
+
+<!--
+
+# "Thread vars" with `AsyncContext` <span class="stage">stage 2</span>
+
+Reliable, collision-free references across the lifespan of async workflows (think `node:async_hooks`).
+
+FIXME: Hard to create a slide-size, grokkable, non-convoluted example :(
+
+-->
 
 ---
 
-# Collection normalization and `Map#emplace()` <span class="stage">stage 2</span>
-
-Lets you intercept incoming data for `Map`s so you can normalize / cleanup or even constraint / deny them.
-
-```js
-const headers = new Map(undefined, {
-  coerceKey: (name) => name.toLowerCase()
-})
-headers.set('X-Requested-With', 'politeness')
-headers // => Map { 'x-requested-with': 'politeness' }
-```
-
-<v-click>
-
-As for `emplace()`, it provides a sort of automatic *upsert*, with variable behavior.
-
-```js
-function addVisit(path) {
-  visitCounts.emplace(path, {
-    insert: () => 0,                     // Arguments: key, map
-    update: (existing) => existing + 1   // Arguments: existing, key, map
-  })
-}
-```
-
-</v-click>
-
----
-
-# `Iterator.range` 🤩 <span class="stage">stage 2</span>
+# ES2027? `Iterator.range` 🤩 <span class="stage">stage 2</span>
 
 Finally an arithmetic sequence generator!  Coupled with iterator helpers, it's just too good…
 
@@ -244,77 +85,103 @@ Go have fun in the [playground!](https://tc39.es/proposal-iterator.range/playgro
 
 ---
 
-# Records &amp; Tuples: Immutability FTW 💖 <span class="stage">stage 2</span>
+# ES2027? Iterator chunking <span class="stage">stage 2</span>
 
-Deep, native immutable objects (records) and arrays (tuples).  We get all the benefits of immutability (e.g. referential equality), and it helps promote functional programming in JS.
-
-All the usual operators and APIs work (`in`, `Object.keys()`, `Object.is()`, `===`, etc.), and this plays nicely with the standard library.  You can easily convert from mutable versions using factories.  Cherry-on-top: `JSON.parseImmutable()`!
+**Chunking**: max-size consecutive views (pagination, repeating layouts, stream processing, bucketing…)
 
 ```js
-// Records
-const grace1 = #{ given: 'Grace', family: 'Hopper' }
-const grace2 = #{ given: 'Grace', family: 'Kelly' }
-const grace3 = #{ ...grace2, family: 'Hopper' }
-grace1 === grace3 // => true!
-Object.keys(grace1) // => ['family', 'given'] -- sorted!
+const prodIds = [0, 1, 2, 3, 4, 5]
+const productRows = (rowSize: number) => Array.from(prodIds.values().chunks(rowSize))
 
-// Tuples
-#[1, 2, 3] === #[1, 2, 3] // => true!
+productRows(2) // => [ [0, 1], [2, 3], [4, 5] ]
+productRows(3) // => [ [0, 1, 2], [3, 4, 5] ]
+productRows(5) // => [ [0, 1, 2, 3], [4, 5] ]
 ```
 
-<Footnote>
+**Windowing**: max-size *sliding* views (running averages, pairwise comparisons, carousels…)
 
-Have fun with the [tutorial](https://tc39.es/proposal-record-tuple/tutorial/), sweet [playground](https://rickbutton.github.io/record-tuple-playground/#eyJjb250ZW50IjoiLy8gU2FsdXQgbCdhdWRpdG9pcmUgZGUgUml2aWVyYURFViAhXG5cbi8vIFJlY29yZHNcbmNvbnN0IGdyYWNlMSA9ICN7IGdpdmVuOiAnR3JhY2UnLCBmYW1pbHk6ICdIb3BwZXInIH1cbmNvbnN0IGdyYWNlMiA9ICN7IGdpdmVuOiAnR3JhY2UnLCBmYW1pbHk6ICdLZWxseScgfVxuY29uc3QgZ3JhY2UzID0gI3sgLi4uZ3JhY2UyLCBmYW1pbHk6ICdIb3BwZXInIH1cblxuZ3JhY2UxID09PSBncmFjZTMgLy8gPT4gdHJ1ZSFcbk9iamVjdC5rZXlzKGdyYWNlMSkgLy8gPT4gWydmYW1pbHknLCAnZ2l2ZW4nXSAtLSBzb3J0ZWQhXG5cbi8vIFR1cGxlc1xuI1sxLCAyLCAzXSA9PT0gI1sxLCAyLCAzXSAvLyA9PiB0cnVlISIsInN5bnRheCI6Imhhc2giLCJkb21Nb2RlIjpmYWxzZX0=) and amazing [cookbook](https://tc39.es/proposal-record-tuple/cookbook/)!
 
-</Footnote>
+```js
+const thumbIds = [0, 1, 2, 3, 4, 5, 6, 7]
+const carouselWindows = (winSize: number) => Array.from(thumbIds.values().windows(winSize))
+
+carouselWindows(2) // => [ [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7] ]
+carouselWindows(3) // => [ [0, 1, 2], [1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6], [5, 6, 7] ]
+carouselWindows(4) // => [ [0, 1, 2, 3], [1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6], [4, 5, 6, 7] ]
+```
+
 
 ---
 
-# `Object.pick()` / `omit()` 🥹 <span class="stage">stage 1</span>
+# ES2027? Seeded PRNG <span class="stage">stage 2</span>
 
-I so want to get rid of Lodash for this…  This is kinda recent (July 2022) and doesn't seem to be high-priority, but hey.  Accepts key sets or a predicate (with an optional `this` specifier).
+All standard-library random number generators (`Math.random()`, `crypto.getRandomValues()`, etc.) are automatically seeded: there is no reliable way of generating the same sequence from one run to the next. Tools that offer custom seeding for replayability (e.g. Jest, Vitest) use custom PRNGs to achieve this.
 
-
-```js
-  const conference = { name: 'Smashing Conference Freiburg', year: 2023, city: 'Freiburg', speakers: 13 }
-  Object.pick(conference, ['name', 'year'])
-  // => { name: 'Smashing Conference Freiburg', year: 2023 }
-
-  Object.pick(conference, (value) => typeof value === 'number')
-  // => { year: 2023, speakers: 13 }
-
-  Object.omit(conference, (value) => typeof value === 'number')
-  // => { name: 'Smashing Conference Freiburg', city: 'Freiburg' }
-```
-
-We *might* even get syntactic sugar for picking!
+This provides a `Random.Seeded` class that can work in simple (8-bit unsigned int as `number`) or full-entropy modes, depending on your needs (simple or cryptographically secure). Instances have a `random()` method isomorphic to `Math.random()`.
 
 ```js
-  conference.{name, year} // => { name: 'Smashing Conference Freiburg', year: 2023 }
+const seed = cli.get('--seed', { default: Math.trunc(Math.random() * 1000) })
+const prng = Random.fromFixed(seed)
 
-  const keys = ['name', 'city']
-  conference.[...keys] // => { name: 'Smashing Conference Freiburg', city: 'Freiburg' }
+prng.random() // => number
+
+// Get state to persist it (Uint8Array)
+const state = prng.getState()
+
+// Reset instance on state
+prng.setState(state)
+// or restore a fresh instance from state
+const prng = Random.fromState(state)
 ```
 
 ---
 
-# `Promise.try()` 🫡 <span class="stage">stage 2</span>
+# Composite keys and values <span class="stage">stage 1</span>
 
-A faster alternative to the usual `Promise.resolve().then(f)` or `new Promise((resolve) => resolve(f()))` shenanigans for allowing promise-based consumer semantics over a function that may be sync or async.
+You know how `Map` keys and `Set` / `Array` values are compared using *SameValueZero*, and that doesn't let you use objects there
 
-Ensures same-tick execution when synchronous whilst being a lot more ergonomic!
+Check out this proposal:
 
 ```js
-// `init` is a value-returning function that may be sync or promise-based async
-async function runProcess({ init... }) {
-  const initial = await Promise.try(init)
-  // ...
+const pointA = Composite({ x: 1, y: 4 })
+const pointB = Composite({ x: 1, y: 4 })
+Composite.equal(pointA, pointB); // => true
+
+new Set([pointA]).has(pointB) // => true
+new Map([[pointA, 'Yes!']]).get(pointB) // => 'Yes!'
+[pointA].includes(pointB) // => true
+[pointA].indexOf(pointB) // => 0
+```
+
+---
+
+# Object's property count <span class="stage">stage 1</span>
+
+ZOMG, **finally!**  Don't you just hate having to build a full-fledged key set just to verify that an object is empty?  Of course, this native property would be **a lot more performant than that!**
+
+```js
+const conf = {
+  name: 'Nordic.js', year: 2025, city: 'Stockholm',
+  [Symbol.toStringTag]: () => '🇸🇪 🏣 🥰'
 }
+Object.defineProperty(conf, 'secret', { value: true })
+
+Object.propertyCount({}) // => 0
+Object.propertyCount(conf) // => 3
+Object.propertyCount(conf, { keyTypes: ['all'] }) // => 4 (adds the symbol)
+Object.propertyCount(conf, { keyTypes: ['all'], enumerable: 'all' }) // => 5 (also adds the secret)
 ```
 
 ---
+layout: cover
+background: /covers/aubrey-odom-T1L9Q5g7eIQ-unsplash.jpg
+---
 
-# The pipeline operator 🪄 <span class="stage">stage 2</span>
+# The Stuck But Cool Ones
+
+---
+
+# The pipeline operator 🪄 <span class="stage">stage 2 (Aug 21)</span>
 
 Massive cleanup of processing chains based on nested calls, interpolation, arithmetic operators, etc.
 
@@ -365,7 +232,7 @@ Note that the substitution syntax (`%`) is [nowhere near settled.](https://githu
 
 ---
 
-# Pattern matching 🤯 <span class="stage">stage 1</span>
+# Pattern matching 🤯 <span class="stage">stage 1 (Mar 22)</span>
 
 A `match` expression that provides sort of a shape-based `switch`.  Has equivalents in Rust, Python, F#, Elixir/Erlang, etc.  This is just a **tiny peak** at what it envisions:
 
@@ -390,7 +257,7 @@ const commandResult = match (command) {
 
 ---
 
-# Finally *truly* legible regexes! 🎉 <span class="stage">stage 1</span>
+# Finally *truly* legible regexes! 🎉 <span class="stage">stage 1 (Oct 21)</span>
 
 Perl, C#, Ruby have it…  JS might finally get fully extended regex syntax. This ignores whitespace (including carriage returns) and comments. Yummy!
 

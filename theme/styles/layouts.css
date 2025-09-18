@@ -1,17 +1,60 @@
 /* Couldn't figure out how to inject the HTML bits in the layout */
 
 @import url("https://fonts.googleapis.com/css2?family=Sriracha&family=Titillium+Web&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 :root {
-  --slidev-theme-primary: #5d8392;
+  --docto-blue: #107aca;
+  --docto-dark-blue: #00264c;
+  --docto-pink: #ff4773;
+  --docto-yellow: #ffba1a;
+
+  --docto-font-titles: "Montserrat";
+  --docto-font-titles-weight: bold;
+  --docto-font-text: "Roboto";
+  --docto-font-text-weight: normal;
+
+  --slidev-theme-primary: var(--docto-blue);
   --slidev-code-font-family: "Operator Mono SSm A", "Operator Mono SSm B",
-    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace !important;
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace !important;
 }
 
 .slidev-layout {
-  h1 {
-    color: var(--slidev-theme-primary);
+  p,
+  li,
+  blockquote,
+  cite {
+    font-family: var(--docto-font-text);
+    font-weight: var(--docto-font-text-weight);
+  }
+
+  code {
+    font-family: "Operator Mono SSm A", "Operator Mono SSm B", "JetBrains Mono",
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--docto-font-titles);
+    font-weight: var(--docto-font-titles-weight);
+    color: var(--docto-blue);
+
+    em {
+      font-style: normal;
+      color: var(--docto-dark-blue);
+    }
+  }
+
+  h2,
+  h4,
+  h6 {
+    color: var(--docto-dark-blue);
   }
 
   /* h1 + p {
@@ -29,17 +72,14 @@
   }
 
   h2 {
-    @apply text-3xl;
+    @apply text-2xl mb-4 mt-4;
   }
 
   h3 {
-    @apply text-2xl;
-  }
-
-  h4 {
     @apply text-xl;
   }
 
+  h4,
   h5 {
     @apply text-base;
   }
@@ -106,7 +146,8 @@
 }
 
 .slidev-layout strong {
-  font-family:
+  font-family: var(--docto-font-titles);
+  /* font-family:
     Sriracha,
     "PT Serif",
     ui-sans-serif,
@@ -122,23 +163,14 @@
     "Apple Color Emoji",
     "Segoe UI Emoji",
     "Segoe UI Symbol",
-    "Noto Color Emoji";
+    "Noto Color Emoji"; */
   font-weight: 400; /* Avoid artificial bolding */
-  color: #ff4773; /* Doctolib's berryblush */
+  color: var(--docto-blue);
   font-size: 105%;
 }
 
-/* Assuming the entire link is strong  */
-.slidev-layout a:has(> strong) {
-  color: #ff4773;
-}
-
-.slidev-layout:not(.cover) h1 {
-  color: #107aca; /* Doctolib Oxylove blue */
-}
-
 .slidev-layout a {
-  color: #107aca;
+  color: var(--docto-blue);
   text-decoration: underline;
   border: 0 none transparent;
 }
@@ -164,11 +196,13 @@
   border-radius: 0.1em;
 }
 
-.slidev-layout :not(pre) > code {
-  background: none;
-  color: #107aca;
+.mermaid {
+  text-align: center;
 }
 
-.slidev-layout a > code {
-  color: inherit;
+footer {
+  img {
+    display: inline-block;
+    height: 1em;
+  }
 }

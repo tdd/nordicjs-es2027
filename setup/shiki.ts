@@ -1,10 +1,11 @@
-import { defineShikiSetup } from '@slidev/types'
+import { defineShikiSetup } from "@slidev/types";
 
-export default defineShikiSetup(() => {
+export default defineShikiSetup(async () => {
   return {
-    theme: {
-      dark: 'monokai',
-      light: 'slack-ochin',
+    themes: {
+      dark: "monokai",
+      // light: "catppuccin-latte", // Also great-looking
+      light: "slack-ochin",
     },
-  }
-})
+  };
+});
