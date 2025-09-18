@@ -50,7 +50,7 @@ background: /covers/mosi-knife--PVgDgKXgZA-unsplash.jpg
 
 # 🙏🏻 Thank you! 😊
 
-These slides are at [`bit.ly/nordicjs-es2027`](https://bit.ly/nordicjs-2027).
+These slides are at [`bit.ly/nordicjs-es2027`](https://bit.ly/nordicjs-es2027).
 
 Christophe: [`@porteneuve@piaille.fr`](https://piaille.fr/@porteneuve) / [LinkedIn](https://www.linkedin.com/in/christopheporteneuve/)
 
