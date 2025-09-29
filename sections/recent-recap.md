@@ -100,7 +100,7 @@ const thisSlot = [
   { title: 'Writing Effective JUnit Tests', mainTag: 'Tests' },
   // …
 ]
-schedule.group(({ mainTag }) => mainTag)
+Object.groupBy(schedule, ({ mainTag }) => mainTag)
 // {
 //   Architecture: [{ title: 'Vertical Slice…'… }, { title: 'On Inheriting…'… }],
 //   DevOps: [{ title: 'Introduction to OpenTelemetry…'… }, { title: 'Accélérez vos API…'… }],
@@ -108,7 +108,7 @@ schedule.group(({ mainTag }) => mainTag)
 //   ...
 // }
 
-schedule.groupToMap(({ mainTag }) => mainTag)
+Map.groupBy(schedule, ({ mainTag }) => mainTag)
 // => Same thing, **as a Map** (so any grouping key type!)
 ```
 
