@@ -85,7 +85,7 @@ Go have fun in the [playground!](https://tc39.es/proposal-iterator.range/playgro
 
 ---
 
-# ES2027? Iterator chunking <span class="stage">stage 2</span>
+# ES2027? Iterator chunking <span class="stage">stage 2.7</span>
 
 **Chunking**: max-size consecutive views (pagination, repeating layouts, stream processing, bucketing…)
 
@@ -110,6 +110,18 @@ carouselWindows(3) // => [ [0, 1, 2], [1, 2, 3], [2, 3, 4], [3, 4, 5], [4, 5, 6]
 carouselWindows(4) // => [ [0, 1, 2, 3], [1, 2, 3, 4], [2, 3, 4, 5], [3, 4, 5, 6], [4, 5, 6, 7] ]
 ```
 
+---
+
+# ES2027? import bytes <span class="stage">stage 2.7</span>
+
+Import arbitrary assets natively, as bytes (`Uint8Array`).
+
+```js
+import icon from './icon.png' with { type: 'bytes' }
+
+// or, dynamically:
+const icon = await import('./icon.png', { with: { type: 'bytes' } })
+```
 
 ---
 
@@ -170,6 +182,20 @@ Object.propertyCount({}) // => 0
 Object.propertyCount(conf) // => 3
 Object.propertyCount(conf, { keyTypes: ['all'] }) // => 4 (adds the symbol)
 Object.propertyCount(conf, { keyTypes: ['all'], enumerable: 'all' }) // => 5 (also adds the secret)
+```
+
+---
+
+# `await` dictionary <span class="stage">stage 1</span>
+
+Because `const [x, y, z] = await Promise.all(…)` isn't so great to maintain…
+
+```js
+const { users, prefs, messages } = await Promise.allKeyed({
+  users: fetchUsers(),
+  prefs: fetchPreferences(),
+  messages: fetchMessages(),
+})
 ```
 
 ---
